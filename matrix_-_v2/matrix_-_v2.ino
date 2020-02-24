@@ -8,7 +8,7 @@ int numberOfVerticalDisplays = 2;
 
 Max72xxPanel matrix = Max72xxPanel(pinCS, numberOfHorizontalDisplays, numberOfVerticalDisplays);
 
-
+char cmd = Serial.read();
 
 void setup() {
   Serial.begin(9600);
@@ -46,7 +46,7 @@ matrix.setRotation(3, 1);
 matrix.setRotation(5, 1);
 matrix.setRotation(7, 1);
 
-//очитска экрана и рисовыание глаз
+//очитска экрана и рисование глаз
 matrix.fillScreen(LOW);
 matrix.write();
 glaza();
@@ -61,24 +61,46 @@ int inc = -2;
 void loop() {
   //подмигивание - winking();
   //моргание - blinking();
-
-  //сейчас код считываеет символ с Serial монитора и выводит нужную картинку
-  char cmd = Serial.read();
-  while (1)
+  
+  cmd = Serial.read();
+  switch(cmd)
   {
-    if (cmd == 'w')
-    {
+    case 'w':
       winking();
-    }
-    else if (cmd == 'b')
-    {
+      break;
+    case 'b':
       blinking();
-    }
-    else if (cmd == 'd' || cmd == 'g')
-    {
+      break;
+    case 'g':
       glaza();
-    }
-    cmd = Serial.read();
+      break;
+    case 'd':
+      glaza();
+      break;
+    case '1':
+      GlaztoAngle(1, 1);
+      break;
+    case '2':
+      GlaztoAngle(2, 2);
+      break;
+    case '3':
+      GlaztoAngle(3, 3);
+      break;
+    case '4':
+      GlaztoAngle(4, 4);
+      break;
+    case '5':
+      GlaztoAngle(5, 5);
+      break;
+    case '6':
+      GlaztoAngle(6, 6);
+      break;
+    case '7':
+      GlaztoAngle(7, 7);
+      break;
+    case '8':
+      GlaztoAngle(8, 8);
+      break;
   }
 
 

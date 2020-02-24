@@ -6,49 +6,52 @@ import threading as tr
 
 class PromobotLidar():
 
+    LeftSectBord = [285, 335]
+    ForwardSectBord = [335, 25]
+    RightSectBord = [25, 75]
+
     flagdraw = False
 
     def __init__(self, PORT):
         self.lidar = rp.RPLidar(PORT, 115200)
-        '''
-        while 1:
-            try:
-                print(PORT)
-                self.lidar = rp.RPLidar(PORT, 115200)
-            except Exception as e:
-                print(e)
-                print("Подключите Лидар или укажите другой порт")
-                PORT1 = input("Укажите порт: ").upper()
-                if PORT1 == "":
-                    continue
-                else:
-                    PORT = PORT1
-                    print(PORT)
-                    continue
-            else:
-                break
-        '''
-
-
 
     def searchforward(self, interval):
-        distance = []
-        # self.lidar.clear_input()
-        scan = next(self.lidar.iter_scans())
-        print("len = ", len(scan), "\n", scan)
-        '''
+        AngDist = []
+        distances = []
+        self.lidar.clear_input()
         for scan in self.lidar.iter_scans():
             try:
                 for i in range(len(scan)):
-                    if scan[i][1] >= 360-(interval/2) or scan[i][1] < interval/2:
-                        print("Adding", scan[i][2], "angle", scan[i][1])
-                        distance.append(scan[i][2])
-                        break
-                    print("skip", scan[i][1])
+                    if scan[i][1] >= 360-(interval/2) or scan[i][1] <= interval/2:
+                        AngDist.append((scan[i][1], scan[i][2]))
+                        distances.append(scan[i][2])
+                minD = min(distances)
+                maxD = max(distances)
+                return minD, maxD, AngDist
             except Exception as E:
                 print(E)
-        '''
-        return distance
+
+    def looksectors(self):
+        LeftDistSects = []
+        ForwardDistSects = []
+        RightDistSects = []
+
+        for scan in self.lidar.iter_scans():
+            try:
+                for i in range(len(scan)):
+                    if scan[i][1] >= self.LeftSectBord[0] and scan[i][1] <= self.LeftSectBord[1]:
+                        LeftDistSects.append(scan[i][2])
+                    elif scan[i][1] > self.ForwardSectBord[0] or scan[i][1] < self.ForwardSectBord[1]:
+                        ForwardDistSects.append(scan[i][2])
+                    elif scan[i][1] >= self.RightSectBord[0] or scan[i][1] <= self.RightSectBord[1]:
+                        RightDistSects.append(scan[i][2])
+                    else:
+                        continue
+
+                return min(LeftDistSects), min(ForwardDistSects), min(RightDistSects)
+            except Exception as E:
+                print(E)
+
 
     def startdrawmap(self, width, height):
         if self.flagdraw == False:
@@ -65,5 +68,5 @@ class PromobotLidar():
 
 if __name__ == '__main__':
     lidar1 = PromobotLidar("COM3")
-    r = lidar1.searchforward(45)
+    r = lidar1.looksectors()
     print(r)

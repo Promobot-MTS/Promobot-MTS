@@ -418,6 +418,86 @@ byte angle8glaz2[16] =
   0b11111000,
 };
 
+byte cute_glaz1_anim1[16] =
+{
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000001,
+  0b00000011,
+  0b00000111,
+  0b00001110,
+  0b00011100,
+  0b00011000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+};
+
+byte cute_glaz2_anim1[16] = 
+{
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b10000000,
+  0b11000000,
+  0b11100000,
+  0b01110000,
+  0b00111000,
+  0b00011000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+};
+
+byte cute_glaz1_anim2[16] =
+{
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000001,
+  0b00000011,
+  0b00000111,
+  0b00001110,
+  0b00011100,
+  0b00011000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+};
+
+byte cute_glaz2_anim2[16] = 
+{
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b10000000,
+  0b11000000,
+  0b11100000,
+  0b01110000,
+  0b00111000,
+  0b00011000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+};
+
 //  0b00011111,
 //  0b00111111,
 //  0b01110000,
@@ -492,28 +572,28 @@ void glaza()
 void blinking()
 {
   glaza(); // рисуем глаза
-  delay(500);
+  delay(100);
   matrix.fillScreen(LOW);
   matrix.drawBitmap(0, 0, blink1_1, 8, 16, 1);
   matrix.drawBitmap(8, 0, blink1_2, 8, 16, 1);
   matrix.drawBitmap(16, 0, blink1_1, 8, 16, 1);
   matrix.drawBitmap(24, 0, blink1_2, 8, 16, 1);
   matrix.write(); // первая стадия закрытия глаза
-  delay(150);
+  delay(30);
   matrix.fillScreen(LOW);
   matrix.drawBitmap(0, 0, blink2, 8, 16, 1);
   matrix.drawBitmap(8, 0, blink2, 8, 16, 1);
   matrix.drawBitmap(16, 0, blink2, 8, 16, 1);
   matrix.drawBitmap(24, 0, blink2, 8, 16, 1);
   matrix.write(); // закрытый глаз
-  delay(400);
+  delay(100);
   matrix.fillScreen(LOW);
   matrix.drawBitmap(0, 0, blink1_1, 8, 16, 1);
   matrix.drawBitmap(8, 0, blink1_2, 8, 16, 1);
   matrix.drawBitmap(16, 0, blink1_1, 8, 16, 1);
   matrix.drawBitmap(24, 0, blink1_2, 8, 16, 1);
   matrix.write(); // первая стадия закрытия глаза
-  delay(150);
+  delay(30);
   glaza(); // риусем глаза
 }
 
@@ -566,34 +646,78 @@ void GlaztoAngle(int num1, int num2)
       glaza();
       break;
     case 1:
+
       matrix.drawBitmap(16, 0, angle1glaz1, 8, 16, 1);
       matrix.drawBitmap(24, 0, angle1glaz2, 8, 16, 1);
       break;
     case 2:
+
       matrix.drawBitmap(16, 0, angle2glaz1, 8, 16, 1);
       matrix.drawBitmap(24, 0, angle2glaz2, 8, 16, 1);
       break;
     case 3:
+    
       matrix.drawBitmap(16, 0, angle3glaz1, 8, 16, 1);
       matrix.drawBitmap(24, 0, angle3glaz2, 8, 16, 1);
       break;
     case 4:
+    
       matrix.drawBitmap(16, 0, angle4glaz1, 8, 16, 1);
       matrix.drawBitmap(24, 0, angle4glaz2, 8, 16, 1);
+      break;
     case 5:
+    
       matrix.drawBitmap(16, 0, angle5glaz1, 8, 16, 1);
       matrix.drawBitmap(24, 0, angle5glaz2, 8, 16, 1);
+      break;
     case 6:
+          
       matrix.drawBitmap(16, 0, angle6glaz1, 8, 16, 1);
       matrix.drawBitmap(24, 0, angle6glaz2, 8, 16, 1);
+      break;
     case 7:
       matrix.drawBitmap(16, 0, angle7glaz1, 8, 16, 1);
       matrix.drawBitmap(24, 0, angle7glaz2, 8, 16, 1);
+      break;
+     
     case 8:
       matrix.drawBitmap(16, 0, angle8glaz1, 8, 16, 1);
       matrix.drawBitmap(24, 0, angle8glaz2, 8, 16, 1);
+      break;
   }
   matrix.write();
+}
+
+void cute(int loop_time)
+{
+  if (loop_time != -1)
+  {
+    int t = millis();
+    int t_new = millis();
+    while (t_new - t <= loop_time)
+    {
+      t_new = millis();
+      matrix.fillScreen(LOW);
+      matrix.drawBitmap(0, 0, cute_glaz1_anim1, 8, 16, 1);
+      matrix.drawBitmap(8, 0, cute_glaz2_anim1, 8, 16, 1);
+      matrix.drawBitmap(16, 0, cute_glaz1_anim1, 8, 16, 1);
+      matrix.drawBitmap(24, 0, cute_glaz2_anim1, 8, 16, 1);
+      matrix.write();
+    
+      delay(200);
+  
+      matrix.fillScreen(LOW);
+      matrix.drawBitmap(0, 0, cute_glaz1_anim2, 8, 16, 1);
+      matrix.drawBitmap(8, 0, cute_glaz2_anim2, 8, 16, 1);
+      matrix.drawBitmap(16, 0, cute_glaz1_anim2, 8, 16, 1);
+      matrix.drawBitmap(24, 0, cute_glaz2_anim2, 8, 16, 1);
+      matrix.write();
+    
+      delay(200);
+    }
+  }
+
+  glaza();
 }
 
 void winking()

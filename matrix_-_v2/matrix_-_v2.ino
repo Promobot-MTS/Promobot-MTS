@@ -63,6 +63,7 @@ void loop() {
   //моргание - blinking();
   
   cmd = Serial.read();
+  
   switch(cmd)
   {
     case 'w':
@@ -77,28 +78,39 @@ void loop() {
     case 'd':
       glaza();
       break;
+    case 'c':
+      cute(2000);
+      break;
     case '1':
+    
       GlaztoAngle(1, 1);
       break;
     case '2':
+    
       GlaztoAngle(2, 2);
       break;
     case '3':
+    
       GlaztoAngle(3, 3);
       break;
     case '4':
+    
       GlaztoAngle(4, 4);
       break;
     case '5':
+    
       GlaztoAngle(5, 5);
       break;
     case '6':
+    
       GlaztoAngle(6, 6);
       break;
     case '7':
+    
       GlaztoAngle(7, 7);
       break;
     case '8':
+    
       GlaztoAngle(8, 8);
       break;
   }

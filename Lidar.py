@@ -23,7 +23,7 @@ class PromobotLidar():
                 self.PORT1 = PORT
                 break
             except:
-                pass
+                print("\n\n    mb lidar has no connected\n    or mb wrong port\n    IDK ^_^  X_X  \\_(*_*)_/")
 
     def restart(self):
         self.lidar.disconnect()

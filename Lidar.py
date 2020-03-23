@@ -1,25 +1,26 @@
 import rplidar as rp
 import cv2
 import numpy as np
+import math as m
+import threading
+import time
 
 class PromobotLidar():
 
-    img = np.zeros((600, 800, 3))
-    PORT1 = "COM3"
-    flagdraw = False
+    PORT = "COM3"
 
     def __init__(self, PORT):
         while 1:
             try:
                 self.lidar = rp.RPLidar(PORT, 115200)
-                self.PORT1 = PORT
+                self.PORT = PORT
                 break
             except:
                 pass
 
     def restart(self):
         self.lidar.disconnect()
-        self.__init__(self.PORT1)
+        self.__init__(self.PORT)
 
     def lookforward(self, interval):
         AngDist = []
@@ -62,20 +63,31 @@ class PromobotLidar():
             self.restart()
 
 
-    def startdrawmap(self, width=480, height=640):
-        frame = np.ones((width, height, 3), dtype=np.uint8)
-        cv2.circle(frame, (100,100), 3, (0,0,255))
-        return frame
-
-
-
-if __name__ == '__main__':
-    li = PromobotLidar("COM3")
-    while 1:
-        r = li.looksectors()
-        if r == None:
-            li.restart()
-        else:
-            break
-
-    print(r)
+    def startdrawmap(self, width=640, height=480, sectors=[[285, 335], [335, 25], [25, 75]]):
+        LeftSectBord = sectors[0]
+        ForwardSectBord = sectors[1]
+        RightSectBord = sectors[2]
+        X = int(width/2)
+        Y = int(height/2)
+        frame = np.ones((height, width, 3), dtype=np.uint8)
+        cv2.circle(frame, (0, 0), 3, (0, 255, 0), -1)
+        # cv2.circle(frame, (width, 0), 3, (0, 255, 0), -1)
+        # cv2.circle(frame, (0, height), 3, (0, 255, 0), -1)
+        # cv2.circle(frame, (width, height), 3, (0, 255, 0), -1)
+        cv2.circle(frame, (X, Y), 3, (0, 0, 255), -1)
+        try:
+            for scan in self.lidar.iter_scans():
+                try:
+                    for i in range(len(scan)):
+                        xo = scan[i][2] * m.sin(scan[i][1])
+                        yo = scan[i][2] * m.cos(scan[i][1])
+                        x = int(X + xo)
+                        y = int(Y + yo)
+                        cv2.circle(frame, (x, y), 2, (0, 255, 0), -1)
+                    return frame
+                except Exception as E:
+                    print(E)
+        except Exception as e:
+            print(e)
+            self.lidar.stop()
+            self.restart()

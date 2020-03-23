@@ -1,6 +1,8 @@
+import RobotAPI as rapi
 import rplidar as rp
 import cv2
 import numpy as np
+import math as m
 
 class PromobotLidar():
 
@@ -62,20 +64,53 @@ class PromobotLidar():
             self.restart()
 
 
-    def startdrawmap(self, width=480, height=640):
+    def startdrawmap(self, width=480, height=640, sectors=[[285, 335], [335, 25], [25, 75]]):
+        LeftSectBord = sectors[0]
+        ForwardSectBord = sectors[1]
+        RightSectBord = sectors[2]
+        X = int(width/2)
+        Y = int(height/2)
         frame = np.ones((width, height, 3), dtype=np.uint8)
-        cv2.circle(frame, (100,100), 3, (0,0,255))
+        cv2.circle(frame, (X, Y), 3, (0,0,255),-1)
+        try:
+            for scan in self.lidar.iter_scans():
+                try:
+                    for i in range(len(scan)):
+                        xo = scan[i][2] * m.sin(scan[i][1])
+                        yo = scan[i][2] * m.cos(scan[i][1])
+                        x = X + xo
+                        y = Y + yo
+                        cv2.circle(frame, (x, y), 2, (255, 0, 0), -1)
+                except Exception as E:
+                    print(E)
+        except:
+            self.lidar.stop()
+            self.restart()
         return frame
 
 
 
-if __name__ == '__main__':
-    li = PromobotLidar("COM3")
+bot = PromobotLidar("/dev/ttyUSB0")
+robot = rapi.RobotAPI()
+ang = 0
+pos = 0
+
+while 1:
     while 1:
-        r = li.looksectors()
-        if r == None:
-            li.restart()
+        dist = bot.looksectors()
+        if dist == None:
+            bot.restart()
         else:
             break
+    # print(dist)
+    # if min(dist) == dist[0]:
+    #     robot.serv(-60)
+    # elif min(dist) == dist[2]:
+    #     robot.serv(60)
+    # else:
+    #     robot.serv(0)
 
-    print(r)
+    frame = bot.startdrawmap(480, 640)
+    robot.set_frame(frame, 30)
+
+

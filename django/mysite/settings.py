@@ -123,7 +123,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-    '/Users/User/Desktop/ШИР 2/CV2/django/polls/static',
+    'D:\Promobot-MTS\django\polls\static',
 ]
 
 
